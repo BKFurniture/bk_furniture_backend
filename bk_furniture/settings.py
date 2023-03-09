@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_jsonform",  # to handle ArrayField widget
+    "phonenumber_field", # to handle phone number field
     "users",
     "products",
     "orders",

@@ -33,7 +33,7 @@ BK Furniture is a new e-commerce application that helps people to buy items abou
     - Create a Database with details:
         - NAME: "BK_Furniture"
         - USER: "postgres"
-        - PASSWORD: ""
+        - PASSWORD: "123456"
         - HOST: "127.0.0.1"
         - PORT: "5432"
 2. Locally starting database
