@@ -4,3 +4,6 @@ psycopg2==2.9.5
 Pillow==9.4.0
 django-jsonform==2.15.0
 django-phonenumber-field[phonenumberslite]
+djangorestframework-simplejwt
+google-api-python-client
+django-cors-headers
