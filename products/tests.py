@@ -3,11 +3,10 @@ from decimal import Decimal
 from django.test import TestCase
 from django.urls import reverse
 
-from rest_framework import status
+# from rest_framework import status
 from rest_framework.test import APIClient
 
 from products.models import Product
-
 from products.serializers import (
     ProductDetailSerializer
 )
@@ -17,7 +16,7 @@ def detail_url(product_id):
     return reverse('products:product-detail', args=[product_id])
 
 
-def create_product( **params):
+def create_product(**params):
     """
     Create and return sample product
     """
@@ -34,6 +33,7 @@ def create_product( **params):
 
     product = Product.objects.create(**defaults)
     return product
+
 
 class PublicProductAPITest(TestCase):
 

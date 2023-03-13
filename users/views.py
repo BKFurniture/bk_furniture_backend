@@ -18,6 +18,7 @@ from .serializers import RegisterSerializer
 
 import unicodedata
 
+
 class RegisterUserAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -42,7 +43,8 @@ class BlackListTokenView(APIView):
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
-            return Response(data={"details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"details": str(e)},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class GoogleAuthenticate(APIView):
@@ -60,7 +62,7 @@ class GoogleAuthenticate(APIView):
             user = User.objects.get(email=id_info["email"])
         except User.DoesNotExist:
             user_data = {
-                "username": id_info["email"], # unique constraint for username
+                "username": id_info["email"],  # unique constraint for username
                 "email": id_info["email"],
                 "password": BaseUserManager().make_random_password(),
                 "first_name": "sdfsf",
@@ -75,12 +77,15 @@ class GoogleAuthenticate(APIView):
             "access": str(refresh.access_token)
         }, status=status.HTTP_200_OK)
 
+
 def remove_accents(input_str):
     nfkd_form = unicodedata.normalize('NFKD', input_str)
     return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
 
+
 def generate_email(id):
     return "f"+str(id)+"@fba.com"
+
 
 def generate_username(first_name, last_name, id):
     first_name = remove_accents(first_name.lower())
@@ -106,10 +111,10 @@ class FacebookAuthenticate(APIView):
             settings.FACEBOOK_ACCESS_TOKEN_URL, params=user_access_token_payload
         )
         user_access_token_response = json.loads(user_access_token_request.text)
-        print("user access token: ",user_access_token_response)
+        print("user access token: ", user_access_token_response)
         if "error" in user_access_token_response:
             user_access_token_error = {
-                "message": "Wrong Facebook access token / This Facebook access token is already expired."
+                "message": "The token is either invalid or has expired"
             }
             return Response(user_access_token_error)
         user_access_token = user_access_token_response["access_token"]
@@ -122,7 +127,8 @@ class FacebookAuthenticate(APIView):
             "grant_type": "client_credentials",
         }
         developers_access_token_request = default_requests.get(
-            settings.FACEBOOK_ACCESS_TOKEN_URL, params=developers_access_token_payload
+            settings.FACEBOOK_ACCESS_TOKEN_URL,
+            params=developers_access_token_payload
         )
         developers_access_token_response = json.loads(
             developers_access_token_request.text
@@ -142,7 +148,8 @@ class FacebookAuthenticate(APIView):
             "access_token": developers_access_token,
         }
         verify_user_access_token_request = default_requests.get(
-            settings.FACEBOOK_DEBUG_TOKEN_URL, params=verify_user_access_token_payload
+            settings.FACEBOOK_DEBUG_TOKEN_URL,
+            params=verify_user_access_token_payload
         )
         verify_user_access_token_response = json.loads(
             verify_user_access_token_request.text
@@ -166,13 +173,15 @@ class FacebookAuthenticate(APIView):
         print("user info:", user_info_response)
         # users_email = user_info_response["email"]
         fba_email = generate_email(user_info_response["id"])
-        fba_username = generate_username(user_info_response["first_name"],user_info_response["last_name"], user_info_response["id"] )
+        fba_username = generate_username(user_info_response["first_name"],
+                                         user_info_response["last_name"],
+                                         user_info_response["id"])
         # create user if not exist
         try:
             user = User.objects.get(email=fba_email)
         except User.DoesNotExist:
             user_data = {
-                    "username": fba_username, # unique constraint for username
+                    "username": fba_username,
                     "email": fba_email,
                     "password": BaseUserManager().make_random_password(),
                     "first_name": user_info_response["first_name"],
