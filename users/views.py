@@ -56,7 +56,9 @@ class GoogleAuthenticate(APIView):
             user_data = {
                 "username": id_info["email"], # unique constraint for username
                 "email": id_info["email"],
-                "password": BaseUserManager().make_random_password()
+                "password": BaseUserManager().make_random_password(),
+                "first_name": "sdfsf",
+                "last_name": "sdfdsf"
             }
             user_serializer = RegisterSerializer(data=user_data)
             if user_serializer.is_valid(raise_exception=True):
