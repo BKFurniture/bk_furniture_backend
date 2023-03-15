@@ -16,5 +16,6 @@ urlpatterns = [
     path("google-authen/", views.GoogleAuthenticate.as_view(),
          name="google-authen"),
     path("facebook-authen/", views.FacebookAuthenticate.as_view(),
-         name="facebook-authen")
+         name="facebook-authen"),
+    path("details/", views.UserDetails.as_view(), name="user-details"),
 ]
