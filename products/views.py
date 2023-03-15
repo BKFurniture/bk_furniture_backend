@@ -1,7 +1,9 @@
+
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework import generics, filters
 
 from products.models import Product, Category
+
 
 from products import serializers
 
@@ -10,6 +12,7 @@ class ProductDetail(RetrieveAPIView):
     lookup_field = "slug"
     serializer_class = serializers.ProductDetailSerializer
     queryset = Product.objects.all()
+
 
 
 class ProductListByCategory(ListAPIView):

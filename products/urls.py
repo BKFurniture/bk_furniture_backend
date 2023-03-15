@@ -3,7 +3,9 @@ from django.urls import (
     # include
 )
 
+
 from products.views import ProductDetail, ProductListByCategory
+
 from . import views
 
 app_name = 'products'
