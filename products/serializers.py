@@ -11,3 +11,10 @@ class ProductDetailSerializer(serializers.ModelSerializer):
            'price', 'description', 'origin',
             'colors', 'sizes', 'is_custom_design']
         read_only_fields = ['id']
+
+
+class ProductListSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Product
+        fields = "__all__"
