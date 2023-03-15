@@ -147,7 +147,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
 SIMPLE_JWT = {
@@ -192,7 +193,7 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # GOOGLE AUTHENTICATION
-GOOGLE_CLIENT_ID = None
+GOOGLE_CLIENT_ID = "286394655273-rs58iifdmnkpgkerd4872fjs9mog27dv.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET = None
 
 #FACEBOOK AUTHENTICATION
