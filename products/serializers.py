@@ -14,7 +14,18 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    
+    category = serializers.StringRelatedField(many=False)
+
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = [
+            "id",
+            "name",
+            "category",
+            "price",
+            "description",
+            "origin",
+            "colors",
+            "sizes",
+            "is_custom_design",
+        ]
