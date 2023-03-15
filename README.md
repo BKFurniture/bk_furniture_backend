@@ -52,3 +52,8 @@ BK Furniture is a new e-commerce application that helps people to buy items abou
     ```
     python3 manage.py runserver
     ```
+
+##  Admin account
+>username: admin
+>email: admin@admin.com
+>pwd: admin123123
