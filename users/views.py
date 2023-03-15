@@ -1,22 +1,21 @@
+import hashlib
+import requests as default_requests
+import unicodedata
+
 from django.conf import settings
 from django.contrib.auth.models import User, BaseUserManager
+from django.http import Http404
 
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
-import hashlib
-
-import requests as default_requests
-
-from rest_framework import permissions, status, exceptions
+from rest_framework import permissions, status, exceptions, generics
 from rest_framework.views import APIView
 from rest_framework.utils import json
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .serializers import RegisterSerializer
-
-import unicodedata
+from .serializers import RegisterSerializer, UserSerializer
 
 
 class RegisterUserAPIView(APIView):
@@ -196,3 +195,15 @@ class FacebookAuthenticate(APIView):
             "refresh": str(refresh),
             "access": str(refresh.access_token)
         }, status=status.HTTP_200_OK)
+
+
+class UserDetails(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        try:
+            user_instance = User.objects.get(id=request.user.id)
+        except User.DoesNotExist:
+            raise Http404
+        user_serializer = UserSerializer(user_instance)
+        return Response(user_serializer.data)
