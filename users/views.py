@@ -95,29 +95,9 @@ def generate_username(first_name, last_name, id):
 
 
 class FacebookAuthenticate(APIView):
-    def get(self, request):
-        # https://facebook.com/dialog/oauth?client_id=236109032265868&redirect_uri=http://localhost:8000/users/facebook-authen/
-
-        # get users access token from code in the facebook login dialog redirect
-        # https://graph.facebook.com/v7.0/oauth/access_token?client_id={your-facebook-apps-id}&redirect_uri=http://localhost:8000/users/facebook-authen/&client_secret={app_secret}&code={code-generated-from-login-result}
-        user_access_token_payload = {
-            "client_id": settings.FACEBOOK_APP_ID,
-            "redirect_uri": "http://localhost:8000/users/facebook-authen/",
-            "client_secret": settings.FACEBOOK_APP_SECRET,
-            "code": request.query_params.get("code"),
-        }
-        user_access_token_request = default_requests.get(
-            settings.FACEBOOK_ACCESS_TOKEN_URL, params=user_access_token_payload
-        )
-        user_access_token_response = json.loads(user_access_token_request.text)
-        print("user access token: ", user_access_token_response)
-        if "error" in user_access_token_response:
-            user_access_token_error = {
-                "message": "The token is either invalid or has expired"
-            }
-            return Response(user_access_token_error)
-        user_access_token = user_access_token_response["access_token"]
-
+    def post(self, request):
+        user_access_token = request.data["access_token"]
+        # print("user_access_token:", user_access_token)
         # get developers access token
         # https://graph.facebook.com/v7.0/oauth/access_token?client_id={your-app-id}&client_secret={your-app-secret}&grant_type=client_credentials
         developers_access_token_payload = {
