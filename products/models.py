@@ -19,11 +19,16 @@ class Category(models.Model):
         return f'/{self.slug}/'
 
 
-
 class Product(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, null=True)
-    category = models.ForeignKey(Category, related_name='products', null=True, blank=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(
+        Category,
+        related_name='products',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
     price = models.DecimalField(max_digits=9, decimal_places=2, default=99.99)
     description = models.TextField(null=True, blank=True)
     origin = models.CharField(max_length=255, null=True, blank=True)
