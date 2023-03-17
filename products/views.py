@@ -19,7 +19,7 @@ class ProductListByCategory(ListAPIView):
     queryset = Product.objects.all()
 
     def get_queryset(self):
-        category_slug = self.request.query_params.get('category_slug')
+        category_slug = self.kwargs['slug']
         try:
             category = Category.objects.get(slug=category_slug)
         except Category.DoesNotExist:
