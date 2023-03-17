@@ -138,30 +138,32 @@ class FacebookAuthenticate(APIView):
                 "message": "Could not verifying user access token."
             }
             return Response(verify_user_access_token_error)
+
         user_id = verify_user_access_token_response["data"]["user_id"]
 
         # get user's email
         # https://graph.facebook.com/{your-user-id}?fields=id,name,email&access_token={your-user-access-token}
         user_info_url = settings.FACEBOOK_URL + user_id
         user_info_payload = {
-            "fields": "id,name,first_name, last_name, middle_name, picture",
+            "fields": "id,name,first_name, last_name, middle_name, picture, email",
             "access_token": user_access_token,
         }
-        user_info_request = default_requests.get(user_info_url, params=user_info_payload)
+        user_info_request = default_requests.get(user_info_url,
+                                                 params=user_info_payload)
         user_info_response = json.loads(user_info_request.text)
         print("user info:", user_info_response)
-        # users_email = user_info_response["email"]
-        fba_email = generate_email(user_info_response["id"])
-        fba_username = generate_username(user_info_response["first_name"],
-                                         user_info_response["last_name"],
-                                         user_info_response["id"])
+        user_email = user_info_response["email"]
+        # fba_email = generate_email(user_info_response["id"])
+        # fba_username = generate_username(user_info_response["first_name"],
+        #                                  user_info_response["last_name"],
+        #                                  user_info_response["id"])
         # create user if not exist
         try:
-            user = User.objects.get(email=fba_email)
+            user = User.objects.get(email=user_email)
         except User.DoesNotExist:
             user_data = {
-                    "username": fba_username,
-                    "email": fba_email,
+                    "username": user_email,
+                    "email": user_email,
                     "password": BaseUserManager().make_random_password(),
                     "first_name": user_info_response["first_name"],
                     "last_name": user_info_response["last_name"],
