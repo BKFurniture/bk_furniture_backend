@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,10 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure--6r)hlk3mwj7^ckcr$(#*k^v+g&u!7s-+sojyt#$)g2+g)3292"
+# SECRET_KEY = "django-insecure--6r)hlk3mwj7^ckcr$(#*k^v+g&u!7s-+sojyt#$)g2+g)3292"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure--6r)hlk3mwj7^ckcr$(#*k^v+g&u!7s-+sojyt#$)g2+g)3292")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "django_jsonform",  # to handle ArrayField widget
-    "phonenumber_field", # to handle phone number field
+    "phonenumber_field",  # to handle phone number field
     "rest_framework_simplejwt.token_blacklist",
     "users",
     "products",
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -107,6 +110,10 @@ DATABASES = {
     }
 }
 
+# Update database configuration from $DATABASE_URL.
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES["default"].update(db_from_env)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -142,7 +149,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = "static/"
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# The URL to use when referring to static files (where they will be served from)
+STATIC_URL = "/static/"
+
+# Simplified static file serving.
+# https://pypi.org/project/whitenoise/
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -165,8 +180,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=2),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': False,
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
@@ -177,9 +192,17 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
+# For example, for a site URL at 'web-production-3640.up.railway.app'
+# (replace the string below with your own site URL):
+ALLOWED_HOSTS = ['web-production-3640.up.railway.app', '127.0.0.1']
+
+# For example, for a site URL is at 'web-production-3640.up.railway.app'
+# (replace the string below with your own site URL):
+CSRF_TRUSTED_ORIGINS = ['https://web-production-3640.up.railway.app']
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'https://bk-furniture-frontend.vercel.app/',
+    'https://bk-furniture-frontend.vercel.app',
 ]
 
 CORS_ALLOW_METHODS = [
@@ -208,7 +231,7 @@ CORS_ALLOW_HEADERS = [
 GOOGLE_CLIENT_ID = "286394655273-rs58iifdmnkpgkerd4872fjs9mog27dv.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET = None
 
-#FACEBOOK AUTHENTICATION
+# FACEBOOK AUTHENTICATION
 FACEBOOK_APP_ID = '236109032265868'
 FACEBOOK_APP_SECRET = '8da9920fd07c219d4b09a42f08f37e07'
 FACEBOOK_DEBUG_TOKEN_URL = "https://graph.facebook.com/debug_token"

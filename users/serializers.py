@@ -42,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Profile
         fields = [
@@ -50,6 +50,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "address",
             "avatar",
         ]
+
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(many=False, read_only=True, required=False)
