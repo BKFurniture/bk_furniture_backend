@@ -3,5 +3,5 @@ from .models import Profile
 
 
 @admin.register(Profile)
-class ProductImageAdmin(admin.ModelAdmin):
+class ProfileAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "phone")
