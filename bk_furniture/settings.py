@@ -194,11 +194,11 @@ SIMPLE_JWT = {
 
 # For example, for a site URL at 'web-production-3640.up.railway.app'
 # (replace the string below with your own site URL):
-ALLOWED_HOSTS = ['web-production-3640.up.railway.app', '127.0.0.1']
+ALLOWED_HOSTS = ['bkfurniturebackend-production.up.railway.app', '127.0.0.1']
 
 # For example, for a site URL is at 'web-production-3640.up.railway.app'
 # (replace the string below with your own site URL):
-CSRF_TRUSTED_ORIGINS = ['https://web-production-3640.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://bkfurniturebackend-production.up.railway.app']
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
