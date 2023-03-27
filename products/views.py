@@ -1,3 +1,4 @@
+
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework import generics, filters
 
@@ -9,16 +10,13 @@ from products import serializers
 
 class ProductDetail(RetrieveAPIView):
     lookup_field = "slug"
-    serializer_class = serializers.ProductDetailSerializer # same response as using ProductListSerializer
+    serializer_class = serializers.ProductDetailSerializer
     queryset = Product.objects.all()
 
 
 class ProductListByCategory(ListAPIView):
     serializer_class = serializers.ProductListSerializer
     queryset = Product.objects.all()
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["price", "avg_rating"]
-    ordering = ["price"]
 
     def get_queryset(self):
         category_slug = self.kwargs['slug']
@@ -36,5 +34,5 @@ class ProductList(generics.ListAPIView):
     serializer_class = serializers.ProductListSerializer
     queryset = Product.objects.all()
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["price", "avg_rating"]
+    ordering_fields = ["price",]
     ordering = ["price"]
