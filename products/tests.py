@@ -12,9 +12,7 @@ from products.serializers import (
     ProductListSerializer
 )
 
-
-def product_by_category_url(category_slug):
-    return reverse('products:product-by-category', args=[category_slug])
+PRODUCT_BY_CATEGORY_URL = reverse('products:product-by-category')
 
 
 def detail_url(product_slug):
@@ -81,7 +79,8 @@ class PublicProductAPITest(TestCase):
             is_custom_design=False,
             category=category2
         )
-        res = self.client.get(product_by_category_url(category1.slug))
+        params = {'category_slug': f'{category1.slug}'}
+        res = self.client.get(PRODUCT_BY_CATEGORY_URL, params)
 
         s1 = ProductListSerializer(p1)
         s2 = ProductListSerializer(p2)
