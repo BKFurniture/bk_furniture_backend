@@ -1,0 +1,87 @@
+from rest_framework import serializers
+
+from .models import Order, OrderItem
+from products.serializers import ProductDetailSerializer
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductDetailSerializer(many=False)
+
+    class Meta:
+        model = OrderItem
+        fields = [
+            "id",
+            "product",
+            "order",
+            "quantity",
+            "sub_total",
+        ]
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    order_items = OrderItemSerializer(many=True, read_only=False)
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "address",
+            "order_date",
+            "expected_delivery_date",
+            "delivery_date",
+            "mobile",
+            "discount",
+            "total_price",
+            "status",
+            "payment_method",
+            "order_items",
+        ]
+
+    def create(self, validated_data):
+        order_items = validated_data.pop('order_items')
+        order = Order.objects.create(**validated_data)
+        for item in order_items:
+            print(item)
+            OrderItem.objects.create(order=order, **item)
+        return order
+
+
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderItem
+        fields = [
+            "id",
+            "product",
+            "order",
+            "quantity",
+            "sub_total",
+        ]
+
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    order_items = OrderItemCreateSerializer(many=True, read_only=False)
+
+    class Meta:
+        model = Order
+        fields = [
+            "id",
+            "address",
+            "order_date",
+            "expected_delivery_date",
+            "delivery_date",
+            "mobile",
+            "discount",
+            "total_price",
+            "status",
+            "payment_method",
+            "order_items",
+        ]
+
+    def create(self, validated_data):
+        order_items = validated_data.pop('order_items')
+        order = Order.objects.create(**validated_data)
+        for item in order_items:
+            print(item)
+            OrderItem.objects.create(order=order, **item)
+        return order
