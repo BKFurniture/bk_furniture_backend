@@ -83,7 +83,7 @@ def remove_accents(input_str):
 
 
 def generate_email(id):
-    return "f"+str(id)+"@fba.com"
+    return "f" + str(id) + "@fba.com"
 
 
 def generate_username(first_name, last_name, id):
@@ -91,7 +91,7 @@ def generate_username(first_name, last_name, id):
     last_name = remove_accents(last_name.lower())
     unique_str = hashlib.sha1(id.encode("UTF-8")).hexdigest()
     unique_str = unique_str[:8]
-    return first_name+'.'+last_name+'.'+unique_str
+    return first_name + '.' + last_name + '.' + unique_str
 
 
 class FacebookAuthenticate(APIView):
@@ -162,11 +162,11 @@ class FacebookAuthenticate(APIView):
             user = User.objects.get(email=user_email)
         except User.DoesNotExist:
             user_data = {
-                    "username": user_email,
-                    "email": user_email,
-                    "password": BaseUserManager().make_random_password(),
-                    "first_name": user_info_response["first_name"],
-                    "last_name": user_info_response["last_name"],
+                "username": user_email,
+                "email": user_email,
+                "password": BaseUserManager().make_random_password(),
+                "first_name": user_info_response["first_name"],
+                "last_name": user_info_response["last_name"],
             }
             user_serializer = RegisterSerializer(data=user_data)
             if user_serializer.is_valid(raise_exception=True):

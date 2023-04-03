@@ -194,7 +194,7 @@ SIMPLE_JWT = {
 
 # For example, for a site URL at 'web-production-3640.up.railway.app'
 # (replace the string below with your own site URL):
-ALLOWED_HOSTS = ['bkfurniturebackend-production.up.railway.app', '127.0.0.1']
+ALLOWED_HOSTS = ['bkfurniturebackend-production.up.railway.app', '127.0.0.1', 'localhost']
 
 # For example, for a site URL is at 'web-production-3640.up.railway.app'
 # (replace the string below with your own site URL):
