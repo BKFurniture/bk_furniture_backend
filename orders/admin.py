@@ -5,7 +5,7 @@ from .models import Order, OrderItem
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("id", "order", "product", "quantity", "sub_total")
 
 
 class OrderItemInline(admin.TabularInline):
