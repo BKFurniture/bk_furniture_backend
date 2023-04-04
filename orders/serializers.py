@@ -25,6 +25,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = [
             "id",
+            "recipient_name",
             "address",
             "order_date",
             "expected_delivery_date",
@@ -36,14 +37,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "payment_method",
             "order_items",
         ]
-
-    def create(self, validated_data):
-        order_items = validated_data.pop('order_items')
-        order = Order.objects.create(**validated_data)
-        for item in order_items:
-            print(item)
-            OrderItem.objects.create(order=order, **item)
-        return order
 
 
 class OrderItemCreateSerializer(serializers.ModelSerializer):
@@ -66,6 +59,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         model = Order
         fields = [
             "id",
+            "recipient_name",
             "address",
             "order_date",
             "expected_delivery_date",

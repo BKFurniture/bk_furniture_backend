@@ -18,6 +18,7 @@ class Order(models.Model):
         ("cash", "Cash"),
     ]
     user = models.ForeignKey(User, related_name="orders", on_delete=models.CASCADE, null=True)
+    recipient_name = models.CharField(max_length=63, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     order_date = models.DateField(auto_now_add=True, blank=True)
     expected_delivery_date = models.DateField(null=True, blank=True)
