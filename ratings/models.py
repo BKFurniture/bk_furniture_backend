@@ -18,11 +18,17 @@ class Rating(models.Model):
     comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # order_item = models.OneToOneField()
+    order_item = models.OneToOneField(
+        'orders.OrderItem',
+        related_name='rating',
+        primary_key=True,
+        on_delete=models.CASCADE,
+    )
     user = models.ForeignKey(
         User,
         related_name='ratings',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True
     )
     product = models.ForeignKey(
         'products.Product',
@@ -31,7 +37,7 @@ class Rating(models.Model):
     )
 
     def __str__(self):
-        return f'{self.user.username} - {self.product.name} - {self.stars}'
+        return f'{self.order_item}'
 
     def create(self, **validated_data):
         return Rating.objects.create(**validated_data)

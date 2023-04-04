@@ -1,11 +1,13 @@
 from rest_framework import serializers
 
 from .models import Order, OrderItem
-from products.serializers import ProductDetailSerializer
+from products.serializers import ProductDetailSerializer, ProductListSerializer
+from ratings.serializers import RatingSerializer
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = ProductDetailSerializer(many=False)
+    product = ProductListSerializer(many=False)
+    rating = RatingSerializer(many=False, read_only=True)
 
     class Meta:
         model = OrderItem
@@ -15,6 +17,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "order",
             "quantity",
             "sub_total",
+            "rating"
         ]
 
 

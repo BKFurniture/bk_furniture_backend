@@ -1,8 +1,12 @@
 from rest_framework import serializers
-
-from users.serializers import UserSerializer
-from ratings.models import Rating, RatingImage
 from datetime import datetime
+
+
+from ratings.models import Rating, RatingImage
+from orders.models import OrderItem, Order
+from users.serializers import ProfileSerializer
+from users.models import Profile
+
 
 class RatingImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,20 +18,20 @@ class RatingImageSerializer(serializers.ModelSerializer):
 
 class RatingSerializer(serializers.ModelSerializer):
     images = RatingImageSerializer(many=True, read_only=True, required=False)
-    user = UserSerializer(many=False, read_only=True, required=False)
-
+    order_item = serializers.StringRelatedField(many=False)
+    user = serializers.StringRelatedField(many=False)
     class Meta:
         model = Rating
         fields = [
-            "id",
             "stars",
             "comment",
             "created_at",
             "updated_at",
-            "user",
+            "order_item",
             "images",
+            "user"
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["order_item", "created_at", "updated_at", "user"]
 
     def update(self, instance, validated_data):
         # rating_user = instance.user
@@ -45,3 +49,20 @@ class RatingSerializer(serializers.ModelSerializer):
         #     setattr(instance, attr, value)
         instance.save()
         return instance
+
+
+class RatingDisplaySerializer(RatingSerializer):
+    class Meta:
+        model = Rating
+        fields = [
+            "stars",
+            "comment",
+            "is_updated",
+            "user",
+            "images",
+        ]
+
+    is_updated = serializers.SerializerMethodField()
+
+    def get_is_updated(self, ob):
+        return ob.updated_at != ob.created_at

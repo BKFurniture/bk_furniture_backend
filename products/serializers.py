@@ -4,7 +4,7 @@ from django.db.models import Avg
 from decimal import Decimal
 
 from products.models import Product, ProductImage
-from ratings.serializers import RatingSerializer
+from ratings.serializers import RatingSerializer, RatingDisplaySerializer
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductDetailSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField(many=False)
     images = ProductImageSerializer(many=True, read_only=True, required=False)
-    ratings = RatingSerializer(many=True, read_only=True, required=False)
+    ratings = RatingDisplaySerializer(many=True, read_only=True, required=False)
 
     class Meta:
         model = Product
