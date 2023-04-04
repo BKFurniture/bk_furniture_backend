@@ -14,7 +14,7 @@ class RatingImageInline(admin.TabularInline):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ("id", "stars", "comment",
+    list_display = ("order_item", "user", "stars", "comment",
                     "created_at", "updated_at")
     inlines = [RatingImageInline]
 

@@ -40,3 +40,6 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name="order_items", on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(null=True, blank=True)
     sub_total = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.order) + "-" + str(self.id) + "-" + str(self.product.slug)
