@@ -19,7 +19,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductDetailSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField(many=False)
     images = ProductImageSerializer(many=True, read_only=True, required=False)
-    ratings = RatingDisplaySerializer(many=True, read_only=True, required=False)
+    # ratings = RatingDisplaySerializer(many=True, read_only=True, required=False)
 
     class Meta:
         model = Product
@@ -35,7 +35,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                   'is_custom_design',
                   'category',
                   'images',
-                  'ratings'
+                #   'ratings'
                   ]
         read_only_fields = ['id']
 
