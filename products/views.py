@@ -1,11 +1,18 @@
 from rest_framework.generics import RetrieveAPIView, ListAPIView
-from rest_framework import generics, filters
+
 from django.db.models import Avg, Count, Q, Value, FloatField
 from django.db.models.functions import Coalesce
 
+from rest_framework import generics, filters, status, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from products.models import Product, Category, CustomDesign
 
 from products import serializers
 from products.models import Product, Category
+from .serializers import CustomDesignSerializer, CategorySerializer
+
 
 
 class ProductDetail(RetrieveAPIView):
@@ -66,3 +73,18 @@ class ProductList(generics.ListAPIView):
             lower_bound = price_range.split("-")[0]
             upper_bound = price_range.split("-")[1]
             return queryset.filter(price__gte=lower_bound, price__lte=upper_bound)
+
+
+
+class CustomDesignStore(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CustomDesignSerializer
+    queryset = CustomDesign.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class CategoryList(generics.ListAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()

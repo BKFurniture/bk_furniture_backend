@@ -12,6 +12,8 @@ app_name = 'products'
 
 # /products/
 urlpatterns = [
+    path("custom-design/", views.CustomDesignStore.as_view(), name="create-custom-design"),
+    path("category-list/", views.CategoryList.as_view(), name="category-list"),
     path('detail/<str:slug>', ProductDetail.as_view(), name='product-detail'),
     path('<str:slug>/',
          ProductListByCategory.as_view(),
