@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, ProductImage
+from .models import Category, Product, ProductImage, CustomDesign, CustomDesignImage
 
 
 @admin.register(ProductImage)
@@ -29,3 +29,19 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "title",)
     inlines = [ProductInline]
     prepopulated_fields = {"slug": ("title",)}
+
+
+@admin.register(CustomDesignImage)
+class CustomDesignImageAdmin(admin.ModelAdmin):
+    list_display = ("id", "custom_design", "url")
+
+
+class CustomDesignImageInline(admin.TabularInline):
+    model = CustomDesignImage
+    extra = 0
+
+
+@admin.register(CustomDesign)
+class CustomDesignAdmin(admin.ModelAdmin):
+    list_display = ("id", "user")
+    inlines = [CustomDesignImageInline]

@@ -3,8 +3,9 @@ from rest_framework import serializers
 from django.db.models import Avg
 from decimal import Decimal
 
-from products.models import Product, ProductImage
+from products.models import Product, ProductImage, CustomDesign, CustomDesignImage, Category
 from ratings.serializers import RatingSerializer, RatingDisplaySerializer
+from users.serializers import UserSerializer
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -72,3 +73,47 @@ class ProductListSerializer(serializers.ModelSerializer):
     def get_count_rating(self, ob):
         count_rating = ob.ratings.all().count()
         return count_rating
+
+
+class CustomDesignImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomDesignImage
+        fields = [
+            "url",
+        ]
+
+
+class CustomDesignSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False, read_only=True)
+    custom_design_images = CustomDesignImageSerializer(many=True, read_only=True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(
+            allow_empty_file=False,
+            use_url=False
+        ),
+        write_only=True
+    )
+
+    class Meta:
+        model = CustomDesign
+        fields = [
+            "user",
+            "description",
+            "custom_design_images",
+            "uploaded_images"
+        ]
+
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop("uploaded_images")
+        custom_design = CustomDesign.objects.create(**validated_data)
+        for image in uploaded_images:
+            CustomDesignImage.objects.create(custom_design=custom_design, url=image)
+        return custom_design
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = "__all__"
