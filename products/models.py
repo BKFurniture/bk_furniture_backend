@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 from django_jsonform.models.fields import ArrayField
 
@@ -53,3 +54,20 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f'{self.product.name} - {self.id}'
+
+
+class CustomDesign(models.Model):
+    user = models.ForeignKey(User, related_name="custom_designs", on_delete=models.CASCADE)
+    description = models.TextField(max_length=1023, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.id} - {self.user.username}'
+
+
+class CustomDesignImage(models.Model):
+    custom_design = models.ForeignKey(
+        CustomDesign,
+        related_name="custom_design_images",
+        on_delete=models.CASCADE
+    )
+    url = models.ImageField(upload_to="custom_design_images/")
