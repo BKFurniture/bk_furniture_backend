@@ -4,8 +4,8 @@ from datetime import datetime
 
 from ratings.models import Rating, RatingImage
 from orders.models import OrderItem, Order
-from users.serializers import ProfileSerializer
-from users.models import Profile
+from users.serializers import UserDisplaySerializer
+# from users.models import Profile
 
 
 class RatingImageSerializer(serializers.ModelSerializer):
@@ -18,8 +18,9 @@ class RatingImageSerializer(serializers.ModelSerializer):
 
 class RatingSerializer(serializers.ModelSerializer):
     images = RatingImageSerializer(many=True, read_only=True, required=False)
-    order_item = serializers.StringRelatedField(many=False)
-    user = serializers.StringRelatedField(many=False)
+    # order_item = serializers.StringRelatedField(many=False)
+    user = UserDisplaySerializer(many=False, read_only=True, required=False)
+
     class Meta:
         model = Rating
         fields = [
@@ -27,11 +28,16 @@ class RatingSerializer(serializers.ModelSerializer):
             "comment",
             "created_at",
             "updated_at",
-            "order_item",
+            # "order_item",
             "images",
             "user"
         ]
-        read_only_fields = ["order_item", "created_at", "updated_at", "user"]
+        read_only_fields = [
+            # "order_item",
+            "created_at",
+            "updated_at",
+            "user"
+        ]
 
     def update(self, instance, validated_data):
         # rating_user = instance.user
@@ -58,6 +64,7 @@ class RatingDisplaySerializer(RatingSerializer):
             "stars",
             "comment",
             "is_updated",
+            "created_at",
             "user",
             "images",
         ]

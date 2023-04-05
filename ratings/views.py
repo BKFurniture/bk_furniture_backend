@@ -20,7 +20,7 @@ from ratings.permissions import IsOwnerOrReadOnly
 
 
 class RatingListByProduct(generics.ListAPIView):
-    serializer_class = serializers.RatingSerializer
+    serializer_class = serializers.RatingDisplaySerializer
     queryset = Rating.objects.all()
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["stars", "created_at"]
@@ -35,7 +35,7 @@ class RatingListByProduct(generics.ListAPIView):
             return Rating.objects.none()
         product_id = product.id
         queryset = queryset.filter(product_id__exact=product_id)
-        return queryset.all().order_by('-order_item_id').distinct()
+        return queryset.all().distinct()
 
 
 class RatingDetailViewSet(viewsets.ModelViewSet):
@@ -50,7 +50,7 @@ class RatingDetailViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         # rating_id = self.kwargs['rating_id']
         # queryset = queryset.filter(id__exact=rating_id)
-        return queryset.all().order_by('-order_item_id').distinct()
+        return queryset.all()
 
     def perform_create(self, serializer):
         # product_slug = self.request.data['product_slug']
