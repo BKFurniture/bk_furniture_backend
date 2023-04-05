@@ -19,7 +19,6 @@ class ProductListByCategory(ListAPIView):
     queryset = Product.objects.annotate(
         count_rating=Count('ratings'),
     )
-    filter_none_rating = Q(count_rating__exact=0)
     queryset = queryset.annotate(
         avg_rating=Coalesce(
             Avg('ratings__stars', output_field=FloatField()),
@@ -40,20 +39,30 @@ class ProductListByCategory(ListAPIView):
         category_id = category.id
         queryset = queryset.filter(category_id__exact=category_id)
         # print(queryset.values('count_rating', 'avg_rating'))
-        return queryset.all().order_by('-count_rating','-id').distinct()
+        return queryset.all().order_by('-count_rating', '-id').distinct()
 
 
 class ProductList(generics.ListAPIView):
     serializer_class = serializers.ProductListSerializer
+    queryset = Product.objects.annotate(
+        count_rating=Count('ratings'),
+    )
+    queryset = queryset.annotate(
+        avg_rating=Coalesce(
+            Avg('ratings__stars', output_field=FloatField()),
+            Value(0, output_field=FloatField()),
+        )
+    )
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["price", "avg_rating"]
     ordering = ["price"]
 
     def get_queryset(self):
+        queryset = self.queryset
         price_range = self.request.query_params.get("price")
         if not price_range:
-            return Product.objects.all()
+            return queryset.all()
         else:
             lower_bound = price_range.split("-")[0]
             upper_bound = price_range.split("-")[1]
-            return Product.objects.filter(price__gte=lower_bound, price__lte=upper_bound)
+            return queryset.filter(price__gte=lower_bound, price__lte=upper_bound)
