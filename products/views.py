@@ -1,10 +1,11 @@
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework import generics, filters
-
-from products.models import Product, Category
+from django.db.models import Avg, Count, Q, Value, FloatField
+from django.db.models.functions import Coalesce
 
 
 from products import serializers
+from products.models import Product, Category
 
 
 class ProductDetail(RetrieveAPIView):
@@ -15,7 +16,16 @@ class ProductDetail(RetrieveAPIView):
 
 class ProductListByCategory(ListAPIView):
     serializer_class = serializers.ProductListSerializer
-    queryset = Product.objects.all()
+    queryset = Product.objects.annotate(
+        count_rating=Count('ratings'),
+    )
+    filter_none_rating = Q(count_rating__exact=0)
+    queryset = queryset.annotate(
+        avg_rating=Coalesce(
+            Avg('ratings__stars', output_field=FloatField()),
+            Value(0, output_field=FloatField()),
+        )
+    )
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["price", "avg_rating"]
     ordering = ["price"]
@@ -29,7 +39,8 @@ class ProductListByCategory(ListAPIView):
         queryset = self.queryset
         category_id = category.id
         queryset = queryset.filter(category_id__exact=category_id)
-        return queryset.all().order_by('-id').distinct()
+        # print(queryset.values('count_rating', 'avg_rating'))
+        return queryset.all().order_by('-count_rating','-id').distinct()
 
 
 class ProductList(generics.ListAPIView):
