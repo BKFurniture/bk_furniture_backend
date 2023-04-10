@@ -36,9 +36,20 @@ class ProductDetailSerializer(serializers.ModelSerializer):
                   'is_custom_design',
                   'category',
                   'images',
-                #   'ratings'
+                  'avg_rating',
+                  'count_rating',
                   ]
         read_only_fields = ['id']
+    avg_rating = serializers.SerializerMethodField()
+    count_rating = serializers.SerializerMethodField()
+
+    def get_avg_rating(self, ob):
+        stars_avg = ob.ratings.all().aggregate(Avg('stars'))['stars__avg']
+        return stars_avg if stars_avg else Decimal(0.0)
+
+    def get_count_rating(self, ob):
+        count_rating = ob.ratings.all().count()
+        return count_rating
 
 
 class ProductListSerializer(serializers.ModelSerializer):
