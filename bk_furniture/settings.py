@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "products",
     "orders",
     "ratings",
+    "chatbot",
     "rest_framework"
 ]
 
@@ -237,3 +238,5 @@ FACEBOOK_APP_SECRET = '8da9920fd07c219d4b09a42f08f37e07'
 FACEBOOK_DEBUG_TOKEN_URL = "https://graph.facebook.com/debug_token"
 FACEBOOK_ACCESS_TOKEN_URL = "https://graph.facebook.com/v7.0/oauth/access_token"
 FACEBOOK_URL = "https://graph.facebook.com/"
+
+OPENAI_API_KEY = "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"
