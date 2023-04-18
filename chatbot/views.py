@@ -1,15 +1,13 @@
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import permissions
-
-# from .BKF_chatbot import ChatBot
-# # Create your views here.
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 
-# class ChatbotView(APIView):
-#     chatbot = ChatBot()
+from .BKF_chatbot import WebappConfig
 
-#     def post(self, request):
-#         message = request.data.get('message')
-#         response = self.chatbot.answer_question(message)
-#         return Response({'response': response})
+
+class ChatbotView(APIView):
+
+    def post(self, request):
+        message = request.data.get('message')
+        response = WebappConfig.chatbot.answer_question(message)
+        return Response({'response': response})
