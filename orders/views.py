@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
@@ -6,6 +7,7 @@ from rest_framework.response import Response
 
 from .serializers import OrderSerializer, OrderCreateSerializer
 from .models import Order
+from promotions.models import Coupon
 
 
 class IsOwner(permissions.BasePermission):
@@ -19,6 +21,10 @@ class OrderCreateView(generics.CreateAPIView):
     queryset = Order.objects.all()
 
     def perform_create(self, serializer):
+        if serializer.validated_data.get("discount"):
+            coupon_instance = get_object_or_404(Coupon, code=serializer.validated_data.get("discount"))
+            coupon_instance.decrease_usage_limit()
+            coupon_instance.add_user_blocklist(self.request.user)
         serializer.save(user=self.request.user)
 
 

@@ -28,6 +28,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure--6r)hlk3mwj7^c
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
+# DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    "rest_framework",
     "django_jsonform",  # to handle ArrayField widget
     "phonenumber_field",  # to handle phone number field
     "rest_framework_simplejwt.token_blacklist",
@@ -50,7 +52,7 @@ INSTALLED_APPS = [
     "orders",
     "ratings",
     "chatbot",
-    "rest_framework"
+    "promotions",
 ]
 
 MIDDLEWARE = [
@@ -164,6 +166,13 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+# DROPBOX_APP_KEY = 'r43oawu1pgmnlxj'
+# DROPBOX_APP_SECRET = 'ak2vh63yj4s21y3'
+# # DROPBOX_OAUTH2_REFRESH_TOKEN = '6d_RVfvAMyoAAAAAAAAAAfwe44YwfumLn0T7lg7bV7D4ImOqKza6XeIAOcZj4cqx'
+# DROPBOX_OAUTH2_TOKEN = 'sl.Bcp8JS8etpoiGls81hPio92KgWhmqe1kjrhRL_aGqiumzsMHWj2HR5EMiFzItBaknNtYMbhDiWCZ0_9InkdOSXFFDsGqR3QEBntGw2ITRFv9jHrX4Znvjab3Aqw013I0vOl3QsOm'
+# DROPBOX_AUTHORIZATION_CODE = '4iVXUaMTtgAAAAAAAAAAFYzp6h5zWLPpbWjcFyDDmDI'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
