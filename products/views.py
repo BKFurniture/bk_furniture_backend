@@ -7,7 +7,7 @@ from rest_framework import generics, filters, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from products.models import Product, Category, CustomDesign
+from products.models import Product, Category, CustomDesign, ProductImage
 
 from products import serializers
 from products.models import Product, Category
@@ -75,7 +75,6 @@ class ProductList(generics.ListAPIView):
             return queryset.filter(price__gte=lower_bound, price__lte=upper_bound)
 
 
-
 class CustomDesignStore(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CustomDesignSerializer
@@ -88,3 +87,30 @@ class CustomDesignStore(generics.CreateAPIView):
 class CategoryList(generics.ListAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+
+
+class ProductImageCreate(generics.CreateAPIView):
+    permission_classes = [permissions.IsAdminUser]
+    serializer_class = serializers.ProductImageCreateSerializer
+    queryset = ProductImage.objects.all()
+
+
+# More consideration
+# class ProductImageCreate(APIView):
+#     permission_classes = [permissions.AllowAny]
+
+#     def post(self, request, format=None):
+#         print(request.data)
+#         product_ids = request.data.get('product_ids').split(',')
+#         print(request.data.get("url1"))
+#         for id in product_ids:
+#             imgs = request.data.get(f'url{int(id)}')
+#             data = {
+#                 "product": id
+#             }
+#             data["urls"] = imgs
+#             print(data)
+#             ser = serializers.ProductImageCreateSerializer(data=data)
+#             if ser.is_valid():
+#                 ser.save()
+#         return Response("OK", status=status.HTTP_201_CREATED)

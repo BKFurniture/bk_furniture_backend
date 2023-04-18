@@ -128,3 +128,28 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
+
+
+class ProductImageCreateSerializer(serializers.ModelSerializer):
+    urls = serializers.ListField(
+        child=serializers.ImageField(
+            allow_empty_file=False,
+            use_url=False
+        ),
+        write_only=True
+    )
+
+    class Meta:
+        model = ProductImage
+        fields = [
+            "product",
+            "urls"
+        ]
+
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop("urls")
+        for image in uploaded_images:
+            product_image = ProductImage.objects.create(**validated_data)
+            product_image.url = image
+            product_image.save()
+        return product_image
