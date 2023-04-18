@@ -17,7 +17,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "order",
             "quantity",
             "sub_total",
-            "rating"
+            "rating",
+            "color",
+            "size"
         ]
 
 
@@ -52,6 +54,8 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
             "order",
             "quantity",
             "sub_total",
+            "color",
+            "size"
         ]
 
 

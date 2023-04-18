@@ -24,7 +24,10 @@ class Order(models.Model):
     expected_delivery_date = models.DateField(null=True, blank=True)
     delivery_date = models.DateField(null=True, blank=True)
     mobile = PhoneNumberField(null=True, blank=True)
-    discount = models.PositiveSmallIntegerField(null=True, blank=True, help_text="discount percents off", default=0)
+    discount = models.CharField(
+        max_length=63, null=True, blank=True,
+        help_text="coupon code"
+    )
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.CharField(max_length=15, choices=ORDER_STATUS_CHOICES, default="processing")
     payment_method = models.CharField(max_length=15, choices=PAYMENT_METHOD_CHOICES, default="paypal")
@@ -40,6 +43,8 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name="order_items", on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(null=True, blank=True)
     sub_total = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    color = models.CharField(max_length=20, null=True, blank=True)
+    size = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return str(self.order) + "-" + str(self.id) + "-" + str(self.product.slug)
