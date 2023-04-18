@@ -14,6 +14,8 @@ from datetime import timedelta
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +30,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure--6r)hlk3mwj7^c
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
+# DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    "rest_framework",
     "django_jsonform",  # to handle ArrayField widget
     "phonenumber_field",  # to handle phone number field
     "rest_framework_simplejwt.token_blacklist",
@@ -49,7 +53,8 @@ INSTALLED_APPS = [
     "products",
     "orders",
     "ratings",
-    "rest_framework"
+    "chatbot",
+    "promotions",
 ]
 
 MIDDLEWARE = [
@@ -164,6 +169,12 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_APP_KEY = os.environ.get("DROPBOX_APP_KEY") if DEBUG is False else os.getenv("DROPBOX_APP_KEY")
+DROPBOX_APP_SECRET = os.environ.get("DROPBOX_APP_SECRET") if DEBUG is False else os.getenv("DROPBOX_APP_SECRET")
+DROPBOX_OAUTH2_REFRESH_TOKEN = os.environ.get("DROPBOX_OAUTH2_REFRESH_TOKEN") if DEBUG is False else os.getenv("DROPBOX_OAUTH2_REFRESH_TOKEN")
+# DROPBOX_OAUTH2_TOKEN = 'sl.Bcp8JS8etpoiGls81hPio92KgWhmqe1kjrhRL_aGqiumzsMHWj2HR5EMiFzItBaknNtYMbhDiWCZ0_9InkdOSXFFDsGqR3QEBntGw2ITRFv9jHrX4Znvjab3Aqw013I0vOl3QsOm'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
@@ -194,7 +205,7 @@ SIMPLE_JWT = {
 
 # For example, for a site URL at 'web-production-3640.up.railway.app'
 # (replace the string below with your own site URL):
-ALLOWED_HOSTS = ['bkfurniturebackend-production.up.railway.app', '127.0.0.1']
+ALLOWED_HOSTS = ['bkfurniturebackend-production.up.railway.app', '127.0.0.1', 'localhost']
 
 # For example, for a site URL is at 'web-production-3640.up.railway.app'
 # (replace the string below with your own site URL):
@@ -237,3 +248,5 @@ FACEBOOK_APP_SECRET = '8da9920fd07c219d4b09a42f08f37e07'
 FACEBOOK_DEBUG_TOKEN_URL = "https://graph.facebook.com/debug_token"
 FACEBOOK_ACCESS_TOKEN_URL = "https://graph.facebook.com/v7.0/oauth/access_token"
 FACEBOOK_URL = "https://graph.facebook.com/"
+
+OPENAI_API_KEY = "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"

@@ -52,6 +52,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProfileDisplaySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = [
+            "avatar",
+        ]
+
+
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(many=False, read_only=True, required=False)
 
@@ -62,5 +71,19 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "username",
+            "email",
+            "profile",
+        ]
+
+
+class UserDisplaySerializer(serializers.ModelSerializer):
+    profile = ProfileDisplaySerializer(
+        many=False, read_only=True, required=False)
+
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
             "profile",
         ]
