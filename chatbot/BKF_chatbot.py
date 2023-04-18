@@ -3,6 +3,7 @@ import openai
 import pandas as pd
 import json
 import tiktoken
+import os
 from django.conf import settings
 from django.apps import AppConfig
 
@@ -71,22 +72,13 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
         chosen_sections.append(SEPARATOR + document_section.Content.replace("\n", " "))
         chosen_sections_indexes.append(str(section_index))
         chosen_sections_points.append(_)
-
-    # if len(chosen_sections) == 0:
-    #     chosen_sections.append('No context given')
-    # Useful diagnostic information
-    print(f"Selected {len(chosen_sections)} document sections:")
-    print("\n".join([
-        f'{df.loc[int(idx)].Request}, {df.loc[int(idx)]["Type of request"]}, {df.loc[int(idx)]["Product"]}'
-        for idx in chosen_sections_indexes
-        ]))
-    print(chosen_sections_points)
     header = """
     We are BK Furniture store, we sells the best quality furnitures. We are here to help customer with your furniture needs.
-    Answer the question as truthfully as possible using the provided context, use a gently voice as you are an customer caring employee.
+    You are aswering the questions as you are Vy, our customer service representative bot.
+    Answer the question as truthfully as possible using the provided context.
     If the answer is not contained within the text below, say "I don't know".
     If the question is not mentioning about our furniture or information about our store, say "I don't know".
-    If the question is not clear, say "I don't understand".
+    If the question is not clear, say "Sorry, I don't understand" or ask if you could help them.
     \n\nContext:\n"""
 
     return header + "".join(chosen_sections) + "\n\n Q: " + question + "\n A:"
@@ -96,16 +88,12 @@ def answer_query_with_context(
     query: str,
     df: pd.DataFrame,
     document_embeddings: dict[(str, str), np.array],
-    show_prompt: bool = False
 ) -> str:
     prompt = construct_prompt(
         query,
         document_embeddings,
         df
     )
-
-    if show_prompt:
-        print(prompt)
 
     response = openai.Completion.create(
                 prompt=prompt,
@@ -118,13 +106,14 @@ def answer_query_with_context(
 class ChatBot:
 
     def __init__(self):
-        print('ok')
-        self.df = pd.read_csv("chatbot\\data_folder\\BKF_Questions.csv")
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        self.df = pd.read_csv(os.path.join(dir_path, 'data_folder', 'BKF_Questions.csv'))
         self.df['tokens'] = self.df.apply(
             lambda row: len(row.Content.split()),
             axis=1
         )
-        self.document_embeddings = json.load(open("chatbot\\data_folder\\doc_emb.json"))
+        self.document_embeddings = json.load(open(os.path.join(dir_path, 'data_folder', 'doc_emb.json')))
 
     def answer_question(self, question: str):
         return answer_query_with_context(
