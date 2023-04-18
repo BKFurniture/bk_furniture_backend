@@ -14,6 +14,8 @@ from datetime import timedelta
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -167,12 +169,11 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-# DROPBOX_APP_KEY = 'r43oawu1pgmnlxj'
-# DROPBOX_APP_SECRET = 'ak2vh63yj4s21y3'
-# # DROPBOX_OAUTH2_REFRESH_TOKEN = '6d_RVfvAMyoAAAAAAAAAAfwe44YwfumLn0T7lg7bV7D4ImOqKza6XeIAOcZj4cqx'
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_APP_KEY = os.environ.get("DROPBOX_APP_KEY") if DEBUG is False else os.getenv("DROPBOX_APP_KEY")
+DROPBOX_APP_SECRET = os.environ.get("DROPBOX_APP_SECRET") if DEBUG is False else os.getenv("DROPBOX_APP_SECRET")
+DROPBOX_OAUTH2_REFRESH_TOKEN = os.environ.get("DROPBOX_OAUTH2_REFRESH_TOKEN") if DEBUG is False else os.getenv("DROPBOX_OAUTH2_REFRESH_TOKEN")
 # DROPBOX_OAUTH2_TOKEN = 'sl.Bcp8JS8etpoiGls81hPio92KgWhmqe1kjrhRL_aGqiumzsMHWj2HR5EMiFzItBaknNtYMbhDiWCZ0_9InkdOSXFFDsGqR3QEBntGw2ITRFv9jHrX4Znvjab3Aqw013I0vOl3QsOm'
-# DROPBOX_AUTHORIZATION_CODE = '4iVXUaMTtgAAAAAAAAAAFYzp6h5zWLPpbWjcFyDDmDI'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
