@@ -44,9 +44,18 @@ class ProductListByCategory(ListAPIView):
             return Product.objects.none()
         queryset = self.queryset
         category_id = category.id
-        queryset = queryset.filter(category_id__exact=category_id)
-        # print(queryset.values('count_rating', 'avg_rating'))
-        return queryset.all().order_by('-count_rating', '-id').distinct()
+        price_range = self.request.query_params.get("price")
+        if not price_range:
+            return queryset.filter(
+                category_id=category_id
+                ).order_by('-count_rating', '-id')
+        else:
+            lower_bound = price_range.split("-")[0]
+            upper_bound = price_range.split("-")[1]
+            return queryset.filter(
+                price__gte=lower_bound,
+                price__lte=upper_bound,
+                category_id=category_id).order_by('-count_rating', '-id')
 
 
 class ProductList(generics.ListAPIView):
@@ -61,7 +70,10 @@ class ProductList(generics.ListAPIView):
         )
     )
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["price", "avg_rating"]
+    ordering_fields = [
+        "price",
+        "avg_rating"
+    ]
     ordering = ["price"]
 
     def get_queryset(self):
@@ -72,7 +84,10 @@ class ProductList(generics.ListAPIView):
         else:
             lower_bound = price_range.split("-")[0]
             upper_bound = price_range.split("-")[1]
-            return queryset.filter(price__gte=lower_bound, price__lte=upper_bound)
+            return queryset.filter(
+                price__gte=lower_bound,
+                price__lte=upper_bound
+                )
 
 
 class CustomDesignStore(generics.CreateAPIView):
