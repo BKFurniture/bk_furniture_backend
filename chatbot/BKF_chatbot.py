@@ -13,7 +13,7 @@ EMBEDDING_MODEL = "text-embedding-ada-002"
 
 openai.api_key = settings.OPENAI_API_KEY
 
-MAX_SECTION_LEN = 300
+MAX_SECTION_LEN = 350
 SEPARATOR = "\n* "
 ENCODING = "gpt2"  # encoding for text-davinci-003
 
