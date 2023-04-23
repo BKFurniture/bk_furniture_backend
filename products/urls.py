@@ -12,6 +12,7 @@ app_name = 'products'
 
 # /products/
 urlpatterns = [
+    path("create-product-list/", views.ProductListCreate.as_view()),
     path("create-product-image/", views.ProductImageCreate.as_view()),
     path("custom-design/", views.CustomDesignStore.as_view(), name="create-custom-design"),
     path("category-list/", views.CategoryList.as_view(), name="category-list"),
