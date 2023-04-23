@@ -153,3 +153,19 @@ class ProductImageCreateSerializer(serializers.ModelSerializer):
             product_image.url = image
             product_image.save()
         return product_image
+
+
+class ProductListCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = [
+            "name",
+            "slug",
+            "category",
+            "price",
+            "description",
+            "origin",
+            "colors",
+            "sizes"
+        ]
