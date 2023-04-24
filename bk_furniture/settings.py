@@ -249,4 +249,4 @@ FACEBOOK_DEBUG_TOKEN_URL = "https://graph.facebook.com/debug_token"
 FACEBOOK_ACCESS_TOKEN_URL = "https://graph.facebook.com/v7.0/oauth/access_token"
 FACEBOOK_URL = "https://graph.facebook.com/"
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", None)
